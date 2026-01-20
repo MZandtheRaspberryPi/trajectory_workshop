@@ -38,8 +38,7 @@ def main():
     os.makedirs(log_dir, exist_ok=True)
 
     # initialize the requied modules
-    # sim: UnicycleSim = UnicycleSim(dt=0.05, noise_cfg=LOW_NOISE, cmd_bounds=CMD_BOUNDS)
-    sim: UnicycleSim = UnicycleSim(dt=0.05, noise_cfg=NO_NOISE, cmd_bounds=CMD_BOUNDS)
+    sim: UnicycleSim = UnicycleSim(dt=0.05, noise_cfg=LOW_NOISE, cmd_bounds=CMD_BOUNDS)
     start: State = sim.get_cur_state()
     start_pt: Point = Point(x=start.x, y=start.y)
     end_pt_goal: Point = Point(x=1.0, y=1.0)

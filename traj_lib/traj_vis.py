@@ -27,9 +27,8 @@ class TrajVisualizer:
         self.time_seq.append(cur_time)
 
     def gen_traj_figs(self, cmd_bounds: CmdBoundaries) -> None:
-
+        plt.rcParams["figure.constrained_layout.use"] = True
         fig = plt.figure(figsize=(12, 12))
-        fig.tight_layout()
 
         gs = fig.add_gridspec(3, 4)
         full_traj_ax = fig.add_subplot(gs[:2, :2])
