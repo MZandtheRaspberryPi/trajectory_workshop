@@ -13,8 +13,9 @@ These are instructions to setup the software on your computer needed to complete
 6. (optional) Install an interactive development environment of your choice to write and run code. This is optional as you can use a text editor like notepad on Windows or the inbuilt text-editor on Mac/Unix.
 7. Run the `main.py` by running `python3 main.py`. A graph should pop up similar to the below figure. This graph may be closed by clicking the X in the top right. Upon closing a file will be created in the directory `traj_data` with the same data that was on the plot. Ensure this all works.
 
-This figure shows in the top left the XY trajectory of the robot along with the goal. Units are in meters. In the middle column, the commands are plotted in blue with the red dotted lines indicating the boundaries of commands above or below which the command will be capped or floored. The third column indicates the trajectory over time, and includes the robot's heading (which is important with the unicycle model as the robot moves in the direction it is facing).
-![traj](./traj_data/traj_2026-01-20_17-05-18.png)
+This figure shows in the top left the XY trajectory of the robot along with the goal. Units are in meters. In the middle column, the commands are plotted in blue with the red dotted lines indicating the boundaries of commands above or below which the command will be capped or floored. The third column indicates the trajectory over time, and includes the robot's heading (which is important with the unicycle model as the robot moves in the direction it is facing).  
+
+![traj](./traj_data/traj_2026-01-21_09-04-16.png)
 
 ## Labratory Questions
 

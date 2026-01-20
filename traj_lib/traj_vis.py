@@ -1,5 +1,6 @@
 from traj_lib.traj_sim import State, Command
 from dataclasses import dataclass
+import math
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -50,6 +51,8 @@ class TrajVisualizer:
 
         times = []
 
+        squared_errors = []
+
         for i in range(len(self.state_seq)):
             state = self.state_seq[i]
             actual_x.append(state.x)
@@ -64,6 +67,12 @@ class TrajVisualizer:
             g = self.goal_traj.get_goal_pt(t)
             x_goal.append(g.x)
             y_goal.append(g.y)
+
+            x_err = abs(state.x - g.x)
+            y_err = abs(state.y - g.y)
+            squared_errors.append((x_err + y_err) ** 2)
+
+        rms_error = math.sqrt(sum(squared_errors) / len(squared_errors))
 
         full_traj_ax.plot(
             [self.start.x], [self.start.y], "gx", markersize=12, label="start"
@@ -83,7 +92,9 @@ class TrajVisualizer:
         full_traj_ax.legend(loc="upper left")
         full_traj_ax.set_xlabel("x (meters)")
         full_traj_ax.set_ylabel("y (meters)")
-        full_traj_ax.set_title("2D Trajectory vs Goal")
+        full_traj_ax.set_title(
+            "2D Trajectory vs Goal, RMS Error {}".format(round(rms_error, 2))
+        )
 
         vx_cmd_ax.plot(times, vx)
         vx_cmd_ax.plot(times, [cmd_bounds.vx_bounds.low] * len(times), "r--")
