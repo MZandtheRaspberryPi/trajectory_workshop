@@ -58,7 +58,7 @@ def main():
         new_state: State = sim.step(new_cmd)
         traj_vis.log(new_cmd, new_state, sim.get_cur_time())
 
-    new_plot_name: str = "traj_" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".pdf"
+    new_plot_name: str = "traj_" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".png"
     new_plot_path: str = os.path.join(log_dir, new_plot_name)
 
     traj_vis.visualize_and_save_traj(cmd_bounds=CMD_BOUNDS, file_path=new_plot_path)
