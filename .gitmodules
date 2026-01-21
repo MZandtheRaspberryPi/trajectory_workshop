@@ -1,0 +1,4 @@
+[submodule "dev/ros2_ws/src/unitree_ros2"]
+	path = dev/ros2_ws/src/unitree_ros2
+	url = git@github.com:JLCucumber/unitree_ros2.git
+	branch = master
