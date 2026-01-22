@@ -33,4 +33,5 @@ setup(
     # and refuse to install the project if the version does not match. See
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
     python_requires=">=3.10, <4",
+    install_requires=["matplotlib==3.9.*"],  # Optional
 )

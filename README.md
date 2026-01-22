@@ -9,7 +9,7 @@ These are instructions to setup the software on your computer needed to complete
 2. Install Git on your computer, supported on Windows, Mac, and various Linux distributions. Link [here](https://git-scm.com/install/mac).
 3. Download the code that we have written for this lab, by opening a terminal (on windows use command prompt) and changing to a known path on your computer you can access (the command `cd` changes the directory, so `cd C:\Users\michael\Documents` changes me to my documents folder in Windows as my username is Michael). "Clone" the repository, meaning download it by running this command in the terminal in the directory you've chosen: `git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop.git`.
 4. Create a virtual environment for this lab (a copy of python with the libraries we need) by moving into the directory you've cloned `cd trajectory_workshop` and running the command `python -m venv venv`. Activate the environment, on windows `venv\Scripts\activate` and on Mac/Unix `source venv/bin/activate`. This will use the virutal environment we've created for any python invocations.
-5. Install dependencies of this lab: `python -m pip install -r requirements.txt`.
+5. Install dependencies of this lab: `pip install -e .`.
 6. (optional) Install an interactive development environment of your choice to write and run code. This is optional as you can use a text editor like notepad on Windows or the inbuilt text-editor on Mac/Unix.
 7. Run the `main.py` by running `python main.py`. A graph should pop up similar to the below figure. This graph may be closed by clicking the X in the top right. Upon closing a file will be created in the directory `traj_data` with the same data that was on the plot. Ensure this all works.
 
