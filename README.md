@@ -15,7 +15,7 @@ These are instructions to setup the software on your computer needed to complete
 
 This figure shows in the top left the XY trajectory of the robot along with the goal, the start point, the end point, the heading of the robot (visualized with an arrow), and the Root Mean Square Error (RMSE) of the trajectory compared to the goal in the title (lower is better). Units are in meters. In the middle column, the commands are plotted in blue with the red dotted lines indicating the boundaries of commands above or below which the command will be capped or floored. The third column indicates the trajectory over time, and includes the robot's heading (which is important with the unicycle model as the robot moves in the direction it is facing).  
 
-![traj](./traj_data/traj_2026-01-22_11-50-42.png)
+![traj](./traj_data/traj_2026-01-22_11-56-15.png)
 
 ## Labratory Questions
 

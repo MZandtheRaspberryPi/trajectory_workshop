@@ -27,9 +27,9 @@ class State:
 
 
 NO_NOISE = NoiseConfig(linear_noise=0.0, angular_noise=0.0)
-LOW_NOISE = NoiseConfig(linear_noise=0.01, angular_noise=0.2 * math.pi / 180)
-MEDIUM_NOISE = NoiseConfig(linear_noise=0.025, angular_noise=0.5 * math.pi / 180)
-HIGH_NOISE = NoiseConfig(linear_noise=0.05, angular_noise=1.0 * math.pi / 180)
+LOW_NOISE = NoiseConfig(linear_noise=0.005, angular_noise=0.2 * math.pi / 180)
+MEDIUM_NOISE = NoiseConfig(linear_noise=0.01, angular_noise=0.5 * math.pi / 180)
+HIGH_NOISE = NoiseConfig(linear_noise=0.025, angular_noise=1.0 * math.pi / 180)
 
 
 class UnicycleSim:
