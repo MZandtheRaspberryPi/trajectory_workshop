@@ -20,7 +20,7 @@ def get_cmd(t: float, goal_traj: TrajShape, cur_state: State) -> Command:
     goal_pt = goal_traj.get_goal_pt(t)
 
     vx_cmd = 0.2
-    vtheta_cmd = 0.0
+    vtheta_cmd = 0.4
 
     # your code starts here
 

@@ -53,6 +53,9 @@ class TrajVisualizer:
 
         squared_errors = []
 
+        arrows_downsample = 10
+        arrow_len = 0.1
+
         for i in range(len(self.state_seq)):
             state = self.state_seq[i]
             actual_x.append(state.x)
@@ -72,6 +75,18 @@ class TrajVisualizer:
             y_err = abs(state.y - g.y)
             squared_errors.append((x_err + y_err) ** 2)
 
+            if i % arrows_downsample == 0:
+
+                new_x = state.x + arrow_len * math.cos(state.heading)
+                new_y = state.y + arrow_len * math.sin(state.heading)
+
+                full_traj_ax.annotate(
+                    "",
+                    xytext=(state.x, state.y),
+                    xy=(new_x, new_y),
+                    arrowprops=dict(arrowstyle="->"),
+                )
+
         rms_error = math.sqrt(sum(squared_errors) / len(squared_errors))
 
         full_traj_ax.plot(
@@ -83,7 +98,7 @@ class TrajVisualizer:
         full_traj_ax.plot(
             [self.start.x] + actual_x,
             [self.start.y] + actual_y,
-            "b-",
+            "b--",
             label="actual_traj",
         )
         full_traj_ax.plot(
