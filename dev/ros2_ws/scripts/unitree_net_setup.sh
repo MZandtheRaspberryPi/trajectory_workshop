@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+export IFACE="eno1"                 # modify here
+export PC_IP="192.168.123.222/24"   # modify here
+
 GO2_IP="192.168.123.161"  # Default IP
 
 echo "[1/4] Bringing interface up: $IFACE"

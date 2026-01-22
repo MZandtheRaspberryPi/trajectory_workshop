@@ -78,6 +78,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-rosidl-generator-dds-idl \
     ros-humble-rmw-cyclonedds-cpp \
+    nlohmann-json3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -111,9 +112,7 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     ros-dev-tools \
     && sudo rm -rf /var/lib/apt/lists/*
 
-COPY cd /home/${USERNAME}/ros_ws/src \
-    && git clone https://github.com/JLCucumber/unitree_ros2.git -b humble \
-    && vcs import < go2_robot/dependencies.repos
+COPY dev/ros2_ws/src/unitree_ros2 /home/${USERNAME}/ros_ws/src/unitree_ros2
 
 RUN cd /home/${USERNAME}/ros_ws \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
@@ -128,5 +127,11 @@ RUN cd /home/${USERNAME}/ros_ws \
     && colcon build --symlink-install \
     && source /home/${USERNAME}/ros_ws/install/setup.bash
 
+RUN cd /home/${USERNAME}/ && sudo apt-get install python3-pip python3-venv -y \
+    && git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop.git \
+    && cd trajectory_workshop \
+    && python3 -m pip install build \
+    && python3 -m build --wheel \
+    && sudo python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 
-
+ 

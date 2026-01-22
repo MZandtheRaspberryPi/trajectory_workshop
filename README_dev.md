@@ -12,6 +12,26 @@ python3 -m build --wheel
 python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 ```
 
+## Docker stuff
+```
+docker build -f docker/Dockerfile -t traj --progress plain .
+mkdir $HOME/docker_mount
+chmod -R 777 $HOME/docker_mount
+docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper traj
+cd ros_ws
+source install/setup.bash
+colcon build --symlink-install
+source scripts/unitree_env_vars.sh # change to your variables b/f
+```
+
+```
+ros2 run unitree_examples_py cmd_vel_to_unitree 
+ros2 run traj_helper trajectory_follower
+```
+
+
+COPY dev/ros2_ws/src/traj_helper /home/${USERNAME}/ros_ws/src/traj_helper
+
 ## Real Robot Network Configuration
 
 Connect with network cable on the laptop

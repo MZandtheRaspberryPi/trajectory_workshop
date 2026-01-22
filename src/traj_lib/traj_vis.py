@@ -143,8 +143,9 @@ class TrajVisualizer:
         return fig
 
     def visualize_and_save_traj(
-        self, cmd_bounds: CmdBoundaries, file_path: str
+        self, cmd_bounds: CmdBoundaries, file_path: str, show: bool = True
     ) -> None:
         fig = self.gen_traj_figs(cmd_bounds)
-        plt.show()
+        if show:
+            plt.show()
         fig.savefig(file_path)
