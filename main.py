@@ -12,7 +12,7 @@ from traj_lib.traj_sim import (
     Command,
 )
 from traj_lib.cfg import CMD_BOUNDS
-from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point
+from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point, SquareTraj
 from traj_lib.traj_vis import TrajVisualizer
 
 
@@ -62,10 +62,11 @@ def main():
     start_pt: Point = Point(x=start.x, y=start.y)
     end_pt_goal: Point = Point(x=1.0, y=1.0)
     goal_seconds: float = 5.0
-    goal_traj: LineTraj = LineTraj(
-        start=start_pt, end=end_pt_goal, seconds=goal_seconds
-    )
+    # goal_traj: LineTraj = LineTraj(
+    #     start=start_pt, end=end_pt_goal, seconds=goal_seconds
+    # )
     # goal_traj: CircleTraj = CircleTraj(start=start_pt, radius=1.5, seconds=goal_seconds)
+    goal_traj: SquareTraj = SquareTraj(start=start_pt, seconds=5, side_len=1.0)
     traj_vis: TrajVisualizer = TrajVisualizer(goal_traj=goal_traj, start=start)
 
     my_cache = dict()
