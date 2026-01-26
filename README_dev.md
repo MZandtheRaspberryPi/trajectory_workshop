@@ -14,14 +14,17 @@ python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 
 ## Docker stuff
 ```Bash
+git submodule update --init --recursive
 docker build -f docker/Dockerfile -t traj --progress plain .
 mkdir $HOME/docker_mount
 chmod -R 777 $HOME/docker_mount
-docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume /home/data/projects/trajectory_workshop/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper traj
+export REPO_PATH=/home/data/projects/trajectory_workshop
+# export REPO_PATH=/home/$USER/trajectory_workshop
+docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/student/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/student/ros_ws/src/FAST_LIO_ROS2 traj
 
 cd ros_ws
 source install/setup.bash
-colcon build --symlink-install --packages-skip inekf go2_odometry
+colcon build --symlink-install --parallel-workers 2 --cmake-args -DCMAKE_BUILD_TYPE=Release
 export ROBOT_TYPE="Go2"   # Go2 or Go2W
 source scripts/unitree_env_vars.sh # change to your variables b/f
 ```

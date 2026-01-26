@@ -137,4 +137,7 @@ RUN cd /home/${USERNAME}/ && sudo apt-get install python3-pip python3-venv -y \
     && python3 -m build --wheel \
     && sudo python3 -m pip install dist/traj_lib-1.0.0-py3-none-any.whl
 
- 
+# for fastlio
+RUN sudo apt install --no-install-recommends libpcl-dev ros-humble-pcl-conversions ros-humble-pcl-ros -y
+RUN git clone https://github.com/Livox-SDK/Livox-SDK2.git && cd ./Livox-SDK2/ && mkdir build && cd build && cmake .. && make -j2 && sudo make install
+RUN sudo chmod 777 /usr/local/lib/liblivox_lidar_sdk_static.a
