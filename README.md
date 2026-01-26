@@ -21,22 +21,25 @@ This figure shows in the top left the XY trajectory of the robot along with the 
 
 This is the lab content with guided questions on the activities and trajectories.
 
-### Question 1 -- Becoming Familliar with the Simulation
+### Section 1 -- Becoming Familliar with the Simulation
 Run `main.py`. Why does the path change each time I run it if i am always passing the same comand? (Hint: look at the intiailization variable `noise_cfg`) and how it is used in the `step` function. What are some scenarios where a robot in the real world might not move exactly forward when commanded to?
 
 Inside of `main.py` the function `get_cmd` is called to get the current velocity command for the robot. `main.py` starts with a goal in x and y of a line from (0, 0) to (1, 1). With reference to the unicycle model, the current implementation of `get_cmd`, and the goal, why does the robot not track the trajectory closely?
 
 If there was no noise in this simulation and the robot starts at an x and y of (0, 0) and with a goal trajectory of a line that starts there and ends at (1, 0) and this trajectory takes 1 second, what would be the velocity command to send to the robot? Change the `LineTraj` in `main.py` to have this goal, change `get_cmd` to implement your given velocity command, and change the `noise_cfg` to `NO_NOISE` in the initialization of `UnicycleSim`. Re-run and ensure success in the output plot. Revert the codechanges you made.
 
-### Question 2 -- Implementing a Controller
+### Section 2 -- Implementing a Controller with Open-Loop Control
 
-Inside of `main.py` there is a section marked `your code starts here` and one that is marked `your code ends here` within the function `get_cmd`. Implement this to implement a controller for the robot to track the initial line trajectory (start (0,0) end (1, 1), seconds 2.0). Show the plot to a Teaching Assistant and give your code to them by email it to them (paste the function into an email).
+In this section we ignore state feedback, and seek to design a controller that works purely "open-loop" ie with no corrective information about where the robot is at a point in time. This is similar to the last question of the prior section.
 
-Now change the trajectory to a circular trajectory. An example is given in `main.py` though this is commented out in the initial file. Implement a controller for this shape.
+Inside of `main.py` there is a section marked `your code starts here` and one that is marked `your code ends here` within the function `get_cmd`. Implement this to implement a controller for the robot to track the initial line trajectory (start (0,0) end (1, 1), seconds 5.0) `goal_traj: LineTraj = LineTraj(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0), seconds=5.0)`. Do not use the `cur_state: State` variable within the `get_cmd` function. Show the plot to a Teaching Assistant and give your code to them by emailing it to them or following their instructions, and test your code on the real robot with the teaching assistant. 
 
+Now change the trajectory to a circular trajectory, `goal_traj: CircleTraj = CircleTraj(start=Point(x=0.0, y=0.0), radius=1.5, seconds=5.0)` and implement a controller that does open-loop and can support this. Can you make it robust to different radii, start points of the circle, or seconds?
 
-## Real Robot Setup
+In terms of profesional tools, basis polynomials or splines could be fitted to such a trajectory and robot model to solve for commands at each time-step...
 
-This is what the students need to submit to the teaching assistants to run their code on the real robot.
+### Section 3 -- Implementing a Controller with Closed-Loop Control
 
+For more difficult trajectories state-feedback is crucial to high performance. Implement a PD-Controller and tune gains such that it adequately follows trajectories, starting with the line trajectory and progressing to the circular trajectory.
 
+In terms of profesional tools, PD-control is in wide use throughout robotics. Alternatives might include Model Predictive Control (MPC) or Linear Quadratic Regulators (LQR) though the non-linear robot model needs some special attention like linearizing via taylor expansions.
