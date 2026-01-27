@@ -6,9 +6,9 @@ export PC_IP="192.168.123.222/24"   # modify here
 
 # Select robot IP based on ROBOT_TYPE (expected: Go2 or Go2W)
 export ROBOT_TYPE="${ROBOT_TYPE:-Go2}"
-if [[ "$ROBOT_TYPE" == "Go2" ]]; then
+if [[ "$ROBOT_TYPE" == "Go2W" ]]; then
   export ROBOT_IP="192.168.123.161"
-elif [[ "$ROBOT_TYPE" == "Go2W" ]]; then
+elif [[ "$ROBOT_TYPE" == "Go2" ]]; then
   export ROBOT_IP="192.168.123.99"
 else
   echo "Unknown ROBOT_TYPE: ${ROBOT_TYPE}. Expected: Go2 or Go2W." >&2

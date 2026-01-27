@@ -25,8 +25,14 @@ docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mou
 cd ros_ws
 source install/setup.bash
 colcon build --symlink-install --parallel-workers 2 --cmake-args -DCMAKE_BUILD_TYPE=Release
-export ROBOT_TYPE="Go2"   # Go2 or Go2W
-source scripts/unitree_env_vars.sh # change to your variables b/f
+source install/setup.bash
+
+# Network Connection 
+# For Go2W - wire connection. Set up a ethernet interface using Ubuntu settings GUI like "unitree Go2W", IP address need to be set under "192.168.123.xxx" with net mask "255.255.255.0"
+# For Go2W w/ Backpack - do ssh connection.  
+
+# DDS setup
+source scripts/unitree_cyclonedds_vars.sh   # modify the name of "NetworkInterface" to yours. 
 ```
 
 ```Bash
