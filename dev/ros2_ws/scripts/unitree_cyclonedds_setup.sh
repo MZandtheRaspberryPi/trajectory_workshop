@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -u # exit if variable is undefined
+
+NET_INTERFACE=$1
 
 # Export DDS and Network Interface
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
@@ -6,7 +9,7 @@ export CYCLONEDDS_URI='<CycloneDDS>
   <Domain>
     <General>
       <Interfaces>
-        <NetworkInterface name="eno1" priority="default" multicast="default" />
+        <NetworkInterface name="'$NET_INTERFACE'" priority="default" multicast="default" />
       </Interfaces>
     </General>
   </Domain>
@@ -17,3 +20,4 @@ export CYCLONEDDS_URI='<CycloneDDS>
   </DDSI2E>
 </CycloneDDS>'
 
+echo "Setup net interface for ${NET_INTERFACE}"
