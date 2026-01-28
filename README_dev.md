@@ -36,7 +36,7 @@ colcon build --symlink-install --parallel-workers 2 --cmake-args -DCMAKE_BUILD_T
 source install/setup.bash
 
 # DDS setup, put in the name of the interface you are using here
-source unitree_cyclonedds_setup.sh enp13s0f1 # something you might find on your laptop if running code there
+# source unitree_cyclonedds_setup.sh enp13s0f1 # something you might find on your laptop if running code there
 source unitree_cyclonedds_setup.sh enxc84d44298f99 # usually used on GO2W with sensor backpack
 ```
 
@@ -90,6 +90,10 @@ When trying to echo data via `ros2 topic echo /utlidar/robot_odom --field pose.p
 - `sudo apt install nload` -> ![alt text](image.png)
 
 Solve: Reboot the robot and Re-run docker container. It should be working now.
+
+3. Building the docker file takes forever, it is hanging on something like `#21 49.72 Get:11 http://ports.ubuntu.com/ubuntu-ports jammy/main arm64 iproute2 arm64 5.15.0-1ubuntu2 [1080 kB]`. 
+
+Not sure what the fix is here....
 
 ## Notes
 
