@@ -12,7 +12,6 @@ setup(
         ("share/" + package_name + "/cfg/fastlio", ["cfg/fastlio/scan_go2w.yaml"]),
         ("share/" + package_name + "/launch", [
             "launch/system.launch.py",
-            "launch/system_open_loop.launch.py"
         ]),
         
     ],

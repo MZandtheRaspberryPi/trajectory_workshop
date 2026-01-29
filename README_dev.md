@@ -38,7 +38,7 @@ source install/setup.bash
 
 # DDS setup, put in the name of the interface you are using here
 export IP_INTERFACE=eno1  # enp13s0f1 (Michael), eno1 (Hongbo), enxc84d44298f99 (Jetson BackPack)
-source unitree_cyclonedds_setup.sh $IP_INTERFACE 
+source scripts/unitree_cyclonedds_setup.sh $IP_INTERFACE 
 ```
 
 Test if things work. On GO2W you should see topics returned by the topic list, and the read motion state will print zeros, but it will recieve messages (Go2W does not run odometry automatically). GO2 topics should print and odometry should print.

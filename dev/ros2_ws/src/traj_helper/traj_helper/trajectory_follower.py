@@ -22,7 +22,7 @@ from traj_lib.traj_sim import (
     Command,
 )
 from traj_lib.cfg import VX_BOUNDS, VTHETA_BOUNDS, CMD_BOUNDS, enforce_bounds
-from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point, SquareTraj
+from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point
 from traj_lib.traj_vis import TrajVisualizer
 
 
@@ -140,16 +140,15 @@ class TrajectoryFollower(Node):
             self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
             self.end_pt_goal: Point = Point(x=1.0, y=1.0)
             self.goal_seconds: float = 2.0
-            # self.goal_traj: LineTraj = LineTraj(
-            #     start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
-            # )
-            self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
+            self.goal_traj: LineTraj = LineTraj(
+                start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
+            )
+            # self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
             # self.goal_traj: SquareTraj = SquareTraj(start=self.start_pt, seconds=5, side_len=1.0)
 
             self.traj_vis: TrajVisualizer = TrajVisualizer(
                 goal_traj=self.goal_traj, start=self.start
             )
-
 
         if not self.new_cmd is None:
             current_time = time.time() - self.start_time
