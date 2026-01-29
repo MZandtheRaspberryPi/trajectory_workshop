@@ -28,8 +28,8 @@ Run steps, change the `REPO_PATH` variable to be the path to where you downloade
 ```Bash
 # export REPO_PATH=/home/data/projects/trajectory_workshop
 export REPO_PATH=/home/$USER/trajectory_workshop
-docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/developer/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/developer/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/developer/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/developer/ros_ws/src/FAST_LIO_ROS2 robohike2-jetson-test
 
+docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/student/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/student/ros_ws/src/FAST_LIO_ROS2 --volume $REPO_PATH/dev/ros2_ws/src/traj_helper_msgs:/home/student/ros_ws/src/traj_helper_msgs traj
 
 cd ros_ws
 source install/setup.bash
@@ -37,8 +37,8 @@ colcon build --symlink-install --parallel-workers 3 --cmake-args -DCMAKE_BUILD_T
 source install/setup.bash
 
 # DDS setup, put in the name of the interface you are using here
-# source unitree_cyclonedds_setup.sh enp13s0f1 # something you might find on your laptop if running code there
-source scripts/unitree_cyclonedds_setup.sh enxc84d44298f99 # usually used on GO2W with sensor backpack
+export IP_INTERFACE=eno1  # enp13s0f1 (Michael), eno1 (Hongbo), enxc84d44298f99 (Jetson BackPack)
+source unitree_cyclonedds_setup.sh $IP_INTERFACE 
 ```
 
 Test if things work. On GO2W you should see topics returned by the topic list, and the read motion state will print zeros, but it will recieve messages (Go2W does not run odometry automatically). GO2 topics should print and odometry should print.
@@ -54,7 +54,7 @@ ros2 topic echo /lf/sportmodestate --field imu_state.rpy
 
 To bringup with fastlio for odom...
 ```Bash
-ros2 launch traj_helper system.launch.py odom_fastlio:=true
+ros2 launch traj_helper system.launch.py odom_fastlio:=false  use_open_loop:=true
 ```
 
 scp student@192.168.1.99:/home/student/docker_mount/traj_data/traj_2026-01-29_09-57-28.png .

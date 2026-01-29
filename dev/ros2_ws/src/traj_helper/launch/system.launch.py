@@ -17,6 +17,7 @@ from launch.launch_description_sources import (
     FrontendLaunchDescriptionSource,
 )
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 
@@ -25,6 +26,7 @@ def generate_launch_description():
 
     odom_fastlio = LaunchConfiguration("odom_fastlio")
     use_open_loop = LaunchConfiguration("use_open_loop")
+    use_sim_time = LaunchConfiguration("use_sim_time")
     declare_odom_fastlio = DeclareLaunchArgument(
         "odom_fastlio",
         default_value="false",
@@ -32,7 +34,7 @@ def generate_launch_description():
     )
     declare_use_open_loop = DeclareLaunchArgument(
         "use_open_loop",
-        default_value=False,
+        default_value="false",
         description="whether to use open loop control (w/o lidar odometry feedback)",
     )
 
@@ -45,8 +47,8 @@ def generate_launch_description():
         package="traj_helper",
         executable="trajectory_follower",
         parameters=[{
-            "state_from_fastlio": False,
-            "use_open_loop": False,
+            "state_from_fastlio": ParameterValue(odom_fastlio, value_type=bool),
+            "use_open_loop": ParameterValue(use_open_loop, value_type=bool),
         }],
         output="screen",
     )

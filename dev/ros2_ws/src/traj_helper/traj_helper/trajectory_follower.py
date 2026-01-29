@@ -38,7 +38,6 @@ def quaternion_to_euler(q_w, q_x, q_y, q_z):
 
     return roll, pitch, yaw
 
-
 def get_cmd(
     t: float, goal_traj: TrajShape, cur_state: State, my_cache: Dict
 ) -> Command:
@@ -140,11 +139,13 @@ class TrajectoryFollower(Node):
 
             self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
             self.end_pt_goal: Point = Point(x=1.0, y=1.0)
-            self.goal_seconds: float = 3.0
-            self.goal_traj: LineTraj = LineTraj(
-                start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
-            )
-            # self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
+            self.goal_seconds: float = 2.0
+            # self.goal_traj: LineTraj = LineTraj(
+            #     start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
+            # )
+            self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
+            # self.goal_traj: SquareTraj = SquareTraj(start=self.start_pt, seconds=5, side_len=1.0)
+
             self.traj_vis: TrajVisualizer = TrajVisualizer(
                 goal_traj=self.goal_traj, start=self.start
             )
