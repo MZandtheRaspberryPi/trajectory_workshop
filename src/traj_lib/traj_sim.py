@@ -32,6 +32,14 @@ MEDIUM_NOISE = NoiseConfig(linear_noise=0.01, angular_noise=0.5 * math.pi / 180)
 HIGH_NOISE = NoiseConfig(linear_noise=0.025, angular_noise=1.0 * math.pi / 180)
 
 
+def wrap_angle(angle: float) -> float:
+    while angle > math.pi:
+        angle -= 2 * math.pi
+    while angle < -math.pi:
+        angle += 2 * math.pi
+    return angle
+
+
 class UnicycleSim:
     def __init__(
         self,
@@ -116,6 +124,7 @@ class UnicycleSim:
         new_x = self.cur_state.x + dx + linear_noise_x
         new_y = self.cur_state.y + dy + linear_noise_y
         new_heading = self.cur_state.heading + dtheta + angular_noise
+        new_heading = wrap_angle(new_heading)
 
         new_state = State(new_x, new_y, new_heading)
         self.cur_time += self.dt

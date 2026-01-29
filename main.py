@@ -61,7 +61,7 @@ def main():
     start: State = sim.get_cur_state()
     start_pt: Point = Point(x=start.x, y=start.y)
     end_pt_goal: Point = Point(x=1.0, y=1.0)
-    goal_seconds: float = 5.0
+    goal_seconds: float = 20.0
     # goal_traj: LineTraj = LineTraj(
     #     start=start_pt, end=end_pt_goal, seconds=goal_seconds
     # )
