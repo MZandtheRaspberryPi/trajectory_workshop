@@ -21,3 +21,5 @@ export CYCLONEDDS_URI='<CycloneDDS>
 </CycloneDDS>'
 
 echo "Setup net interface for ${NET_INTERFACE}"
+
+set +u

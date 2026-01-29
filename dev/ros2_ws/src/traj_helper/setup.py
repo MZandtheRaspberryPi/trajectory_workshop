@@ -10,7 +10,11 @@ setup(
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
         ("share/" + package_name + "/cfg/fastlio", ["cfg/fastlio/scan_go2w.yaml"]),
-        ("share/" + package_name + "/launch", ["launch/system.launch.py"]),
+        ("share/" + package_name + "/launch", [
+            "launch/system.launch.py",
+            "launch/system_open_loop.launch.py"
+        ]),
+        
     ],
     install_requires=["setuptools"],
     zip_safe=True,
