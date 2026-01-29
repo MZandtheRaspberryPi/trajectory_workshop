@@ -36,33 +36,12 @@ def get_cmd(
     Returns:
         Command: The command to pass to the robot.
     """
-    Kp_x = 1.0
-    Kp_theta = 1.0
 
-
-    goal_pt = goal_traj.get_goal_pt(t)
-    x_tar = goal_pt.x
-    y_tar = goal_pt.y
-
-    x_cur = cur_state.x
-    y_cur = cur_state.y
-    heading_cur = wrap_angle(cur_state.heading)
-
+    vx_cmd = 0.4
+    vtheta_cmd = 0.2
+    
     # your code starts here
 
-    # distance error
-    e_dist = math.sqrt((x_tar - x_cur)**2 + (y_tar - y_cur)**2)
-
-    # calculate angle error
-    heading_tar = math.atan2(y_tar - y_cur, x_tar - x_cur)
-    e_theta = heading_tar - heading_cur
-
-    vx_cmd = Kp_x * e_dist
-    vtheta_cmd = Kp_theta * e_theta
-
-    # optional damping on v_x
-    vx_cmd *= max(0, math.cos(e_theta))    # when current heading aligns with target heading (cos=1), v_x is not scaled down
- 
     # your code ends here
 
     new_cmd = Command(vx_cmd, vtheta_cmd)
