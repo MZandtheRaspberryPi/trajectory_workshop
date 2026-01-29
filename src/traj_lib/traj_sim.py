@@ -55,12 +55,6 @@ class UnicycleSim:
             cmd_bounds (CmdBoundaries, optional): The low/high boundaries for velocity commands. Defaults to CMD_BOUNDS.
         """
 
-        """Simulates a unicycle model with gaussian noise (centered on zero) on the control inputs. Intialize the Simulation by choosing a noise configuration.
-
-        Args:
-            dt (float, optional): how much to advance time each time step is called, in seconds. Defaults to 0.20.
-            noise_cfg (NoiseConfig, optional): How much noise to add to linear and angular velocity. Defaults to LOW_NOISE.
-        """
         self.noise_cfg = noise_cfg
         self.cur_state = State(0.0, 0.0, 0.0)
         self.cur_time = 0.0

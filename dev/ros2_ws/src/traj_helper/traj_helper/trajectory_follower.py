@@ -10,6 +10,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from unitree_go.msg import SportModeState
 from nav_msgs.msg import Odometry
+from traj_helper_msgs.msg import DummyOdom
 
 from traj_lib.traj_sim import (
     NO_NOISE,
@@ -75,10 +76,25 @@ class TrajectoryFollower(Node):
 
         # Publisher for cmd_vel
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 10)
-        self.declare_parameter("state_from_fastlio", False)
-        self.state_from_fastlio = self.get_parameter("state_from_fastlio").value
+        self.dummy_odom_pub = self.create_publisher(DummyOdom, "dummy_odom", 10)
 
-        if not self.state_from_fastlio:
+        # Parameters
+        self.declare_parameter("state_from_fastlio", False)
+        self.declare_parameter("use_open_loop", False)
+        self.use_open_loop = (
+            self.get_parameter("use_open_loop").value
+        )
+        self.state_from_fastlio = (
+            self.get_parameter("state_from_fastlio").value
+        )
+
+        if self.use_open_loop:
+            # subscribe for dummy cmd-based odometry
+            self.get_logger().info("Using open loop dummy odometry")
+            self.state_sub = self.create_subscription(
+                DummyOdom, "dummy_odom", self.open_loop_state_cb, 10
+            ) 
+        elif not self.state_from_fastlio:
             # Subscriber for sportmodestate
             self.state_sub = self.create_subscription(
                 SportModeState, "lf/sportmodestate", self.state_cb, 10
@@ -109,6 +125,35 @@ class TrajectoryFollower(Node):
         # initialize the requied modules
         self.start: State = None
 
+    def open_loop_state_cb(self, msg):
+
+        x, y, heading = (None, None, None)
+        
+        x = msg.x
+        y = msg.y
+        heading = msg.heading
+        self.current_state = State(x, y, heading)
+
+        if self.start is None:
+            self.start_time = time.time()
+            self.start = copy(self.current_state)
+
+            self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
+            self.end_pt_goal: Point = Point(x=1.0, y=1.0)
+            self.goal_seconds: float = 3.0
+            self.goal_traj: LineTraj = LineTraj(
+                start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
+            )
+            # self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
+            self.traj_vis: TrajVisualizer = TrajVisualizer(
+                goal_traj=self.goal_traj, start=self.start
+            )
+
+
+        if not self.new_cmd is None:
+            current_time = time.time() - self.start_time
+            self.traj_vis.log(self.new_cmd, self.current_state, current_time)
+
     def state_cb(self, msg):
         """Callback for receiving state"""
         x, y, heading = (None, None, None)
@@ -125,9 +170,7 @@ class TrajectoryFollower(Node):
                 msg.pose.pose.orientation.z,
                 msg.pose.pose.orientation.w,
             )
-
-            r, p, heading = quaternion_to_euler(quat_w, quat_x, quat_y, quat_z)
-
+            r, p, heading = quaternion_to_euler(quat_w, quat_x, quat_y, quat_z)        
         else:
             raise NotImplementedError
 
@@ -135,6 +178,7 @@ class TrajectoryFollower(Node):
 
         if self.start is None:
             self.start_time = time.time()
+            
             self.start = copy(self.current_state)
 
             self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
@@ -161,7 +205,20 @@ class TrajectoryFollower(Node):
         """Timer callback for publishing cmd_vel"""
 
         if self.current_state is None:
-            return
+            if self.use_open_loop:
+                self.get_logger().info("No state received, publishing zero dummy odom...")
+                dummy_odom = DummyOdom()
+
+                dummy_odom.x = 0.001
+                dummy_odom.y = 0.001
+                dummy_odom.heading = 0.001
+
+                self.dummy_odom_pub.publish(dummy_odom)
+
+                return
+            else:
+                self.get_logger().info("Waiting for state...")
+                return
 
         cmd_vel = Twist()
 
@@ -190,6 +247,25 @@ class TrajectoryFollower(Node):
             self.new_cmd = Command(0.0, 0.0)
             self.get_logger().info(f"done, {t}")
         self.cmd_vel_pub.publish(cmd_vel)
+
+        if self.use_open_loop:
+            
+            dummy_odom = DummyOdom()
+
+            # cur_state
+            cur_state = self.current_state
+
+            # delta: [v*cos*dt, v*sin*dt, omega*dt]
+            dx = cmd_vel.linear.x * self.dt * math.cos(cur_state.heading)
+            dy = cmd_vel.linear.x * self.dt * math.sin(cur_state.heading)
+            d_theta = cmd_vel.angular.z * self.dt
+
+            # dummy_odom = cur_state + delta 
+            dummy_odom.x = cur_state.x + dx
+            dummy_odom.y = cur_state.y + dy
+            dummy_odom.heading = cur_state.heading + d_theta
+
+            self.dummy_odom_pub.publish(dummy_odom)
 
         # print command velocity
         self.get_logger().info(f"Command Velocity: {self.new_cmd}")

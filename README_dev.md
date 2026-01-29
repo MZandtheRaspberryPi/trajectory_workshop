@@ -16,7 +16,7 @@ cd $HOME
 git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop --recurse-submodules
 cd trajectory_workshop
 git submodule update --init --recursive
-docker build -f docker/Dockerfile -t traj --progress plain .
+docker build --network host -f docker/Dockerfile -t traj --progress plain .
 mkdir $HOME/docker_mount
 chmod -R 777 $HOME/docker_mount
 ```
@@ -25,7 +25,7 @@ chmod -R 777 $HOME/docker_mount
 
 Run steps, change the `REPO_PATH` variable to be the path to where you downloaded the git repo. Additionally, For Go2 - wire connection. Set up a ethernet interface using Ubuntu settings GUI like "unitree Go2W", IP address need to be set under "192.168.123.xxx" with net mask "255.255.255.0". For Go2W w/ Backpack - do ssh connection to the jetson. You may need to plug the jetson into a monitor to connect it to the lab WIFI and figure out what IP address it is for the WIFI Interface. From there just check the other network interfaces are on different subnets (192.168.2.50, the 2 is the subnet) and the WIFI interface is on the 192.168.1.xxx subnet. From here you should be able to SSH into it. We set the en01 interface to static ip 192.168.2.50 and netmask 255.255.255.0, which talks to the livox. We set the enxc84d44298f99 interface to 192.168.123.222 with netmask 255.255.255.0.
 
-```
+```Bash
 # export REPO_PATH=/home/data/projects/trajectory_workshop
 export REPO_PATH=/home/$USER/trajectory_workshop
 docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/developer/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/developer/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/developer/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/developer/ros_ws/src/FAST_LIO_ROS2 robohike2-jetson-test
@@ -33,7 +33,7 @@ docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mou
 
 cd ros_ws
 source install/setup.bash
-colcon build --symlink-install --parallel-workers 1 --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --symlink-install --parallel-workers 3 --cmake-args -DCMAKE_BUILD_TYPE=Release
 source install/setup.bash
 
 # DDS setup, put in the name of the interface you are using here

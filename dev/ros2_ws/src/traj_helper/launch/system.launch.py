@@ -24,10 +24,16 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     odom_fastlio = LaunchConfiguration("odom_fastlio")
+    use_open_loop = LaunchConfiguration("use_open_loop")
     declare_odom_fastlio = DeclareLaunchArgument(
         "odom_fastlio",
         default_value="false",
         description="whether to bring up odom via fast lio, or rely on unitree msg for odom",
+    )
+    declare_use_open_loop = DeclareLaunchArgument(
+        "use_open_loop",
+        default_value=False,
+        description="whether to use open loop control (w/o lidar odometry feedback)",
     )
 
     fastlio_cfg_file = LaunchConfiguration("fastlio_cfg_file")
@@ -38,7 +44,10 @@ def generate_launch_description():
     traj_follower_node = Node(
         package="traj_helper",
         executable="trajectory_follower",
-        parameters=[{"state_from_fastlio": odom_fastlio}],
+        parameters=[{
+            "state_from_fastlio": False,
+            "use_open_loop": False,
+        }],
         output="screen",
     )
 
@@ -115,6 +124,7 @@ def generate_launch_description():
 
     # Add the actions
     ld.add_action(declare_odom_fastlio)
+    ld.add_action(declare_use_open_loop)
     ld.add_action(declare_fastlio_cfg_file)
 
     ld.add_action(traj_follower_node)
