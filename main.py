@@ -11,24 +11,11 @@ from traj_lib.traj_sim import (
     UnicycleSim,
     State,
     Command,
+    wrap_angle,
 )
 from traj_lib.cfg import CMD_BOUNDS
 from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point, SquareTraj
 from traj_lib.traj_vis import TrajVisualizer
-
-def wrap_to_pi(angle: float) -> float:
-    """Wraps an angle in radians to the range [-pi, pi].
-
-    Args:
-        angle (float): angle in radians
-    Returns:
-        float: angle wrapped to [-pi, pi]
-    """
-    while angle > math.pi:
-        angle -= 2 * math.pi
-    while angle < -math.pi:
-        angle += 2 * math.pi
-    return angle
 
 def get_cmd(
     t: float, goal_traj: TrajShape, cur_state: State, my_cache: Dict
@@ -59,7 +46,7 @@ def get_cmd(
 
     x_cur = cur_state.x
     y_cur = cur_state.y
-    heading_cur = wrap_to_pi(cur_state.heading)
+    heading_cur = wrap_angle(cur_state.heading)
 
     # your code starts here
 
