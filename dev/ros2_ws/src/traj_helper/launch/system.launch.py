@@ -87,7 +87,7 @@ def generate_launch_description():
     lvx_file_path = "/home/livox/livox_test.lvx"
     cmdline_bd_code = "livox0000000001"
 
-    user_config_path = "/home/developer/ros_ws/src/livox_ros_driver2/config/MID360_config_go2w_nuc.json"
+    user_config_path = "/home/developer/ros_ws/src/livox_ros_driver2/config/MID360_config_go2w_jetson.json"
     ################### user configure parameters for ros2 end #####################
 
     livox_ros2_params = [

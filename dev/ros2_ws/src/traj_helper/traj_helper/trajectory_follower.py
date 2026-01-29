@@ -21,7 +21,7 @@ from traj_lib.traj_sim import (
     Command,
 )
 from traj_lib.cfg import VX_BOUNDS, VTHETA_BOUNDS, CMD_BOUNDS, enforce_bounds
-from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point
+from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point, SquareTraj
 from traj_lib.traj_vis import TrajVisualizer
 
 
@@ -41,12 +41,26 @@ def quaternion_to_euler(q_w, q_x, q_y, q_z):
 def get_cmd(
     t: float, goal_traj: TrajShape, cur_state: State, my_cache: Dict
 ) -> Command:
+    """This is a function that will be called in a loop and used to get commands to pass to the robot.
+    If this function returns non-sensical values they will be bounded before being passed to the robot,
+    using CMD_BOUNDS.
+
+    Args:
+        t (float): time in seconds from the start of the run
+        goal_traj (TrajShape): goal trajectory that can be queried for the current goal point, or future/prior goal points
+        cur_state (State): current state of the robot at t.
+        my_cache (Dict): a helper variable that will be passed to this function allowing caching of variables between function invocations
+            by setting a key in the dictionary to some value. That key/value will be in the dictionary when the function returns
+            and the next function call will have the same key/value.
+            Not nescessary, but helpful for those that wish to persist variables between function invocations.
+
+    Returns:
+        Command: The command to pass to the robot.
+    """
 
     goal_pt = goal_traj.get_goal_pt(t)
-
     vx_cmd = 0.2
     vtheta_cmd = 0.4
-
     # your code starts here
 
     # your code ends here
@@ -125,11 +139,16 @@ class TrajectoryFollower(Node):
 
             self.start_pt: Point = Point(x=self.start.x, y=self.start.y)
             self.end_pt_goal: Point = Point(x=1.0, y=1.0)
-            self.goal_seconds: float = 1.0
+            self.goal_seconds: float = 5.0
             self.goal_traj: LineTraj = LineTraj(
                 start=self.start_pt, end=self.end_pt_goal, seconds=self.goal_seconds
             )
-            # self.goal_traj: CircleTraj = CircleTraj(start=self.start_pt, radius=1.5, seconds=self.goal_seconds)
+            # self.goal_traj: SquareTraj = SquareTraj(
+            # start=self.start_pt, seconds=self.goal_seconds, side_len=1.0
+            # )
+            # self.goal_traj: CircleTraj = CircleTraj(
+            #     start=self.start_pt, radius=1.5, seconds=self.goal_seconds
+            # )
             self.traj_vis: TrajVisualizer = TrajVisualizer(
                 goal_traj=self.goal_traj, start=self.start
             )
@@ -169,7 +188,7 @@ class TrajectoryFollower(Node):
             cmd_vel.angular.z = enforce_bounds(self.new_cmd.vtheta, VTHETA_BOUNDS)
         else:
             self.new_cmd = Command(0.0, 0.0)
-            self.get_logger().info("done")
+            self.get_logger().info(f"done, {t}")
         self.cmd_vel_pub.publish(cmd_vel)
 
         # print command velocity
