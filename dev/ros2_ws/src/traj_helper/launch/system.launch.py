@@ -26,7 +26,6 @@ def generate_launch_description():
 
     odom_fastlio = LaunchConfiguration("odom_fastlio")
     use_open_loop = LaunchConfiguration("use_open_loop")
-    use_sim_time = LaunchConfiguration("use_sim_time")
     declare_odom_fastlio = DeclareLaunchArgument(
         "odom_fastlio",
         default_value="false",

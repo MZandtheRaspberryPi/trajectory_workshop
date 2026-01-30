@@ -75,7 +75,6 @@ class TrajectoryFollower(Node):
 
         # Publisher for cmd_vel
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 10)
-        self.dummy_odom_pub = self.create_publisher(DummyOdom, "dummy_odom", 10)
 
         # Parameters
         self.declare_parameter("state_from_fastlio", False)
@@ -123,6 +122,18 @@ class TrajectoryFollower(Node):
 
         # initialize the requied modules
         self.start: State = None
+
+        if self.use_open_loop:
+            self.dummy_odom_pub = self.create_publisher(DummyOdom, "dummy_odom", 10)
+
+            self.get_logger().info("No state received, publishing zero dummy odom...")
+            dummy_odom = DummyOdom()
+
+            dummy_odom.x = 0.001
+            dummy_odom.y = 0.001
+            dummy_odom.heading = 0.001
+
+            self.dummy_odom_pub.publish(dummy_odom)
 
     def open_loop_state_cb(self, msg):
 
@@ -203,22 +214,9 @@ class TrajectoryFollower(Node):
 
     def timer_callback(self):
         """Timer callback for publishing cmd_vel"""
-
         if self.current_state is None:
-            if self.use_open_loop:
-                self.get_logger().info("No state received, publishing zero dummy odom...")
-                dummy_odom = DummyOdom()
-
-                dummy_odom.x = 0.001
-                dummy_odom.y = 0.001
-                dummy_odom.heading = 0.001
-
-                self.dummy_odom_pub.publish(dummy_odom)
-
-                return
-            else:
-                self.get_logger().info("Waiting for state...")
-                return
+            self.get_logger().info("Waiting for state...")
+            return
 
         cmd_vel = Twist()
 
@@ -247,7 +245,7 @@ class TrajectoryFollower(Node):
             self.new_cmd = Command(0.0, 0.0)
             self.get_logger().info(f"done, {t}")
         self.cmd_vel_pub.publish(cmd_vel)
-
+        
         if self.use_open_loop:
             
             dummy_odom = DummyOdom()
@@ -266,7 +264,6 @@ class TrajectoryFollower(Node):
             dummy_odom.heading = cur_state.heading + d_theta
 
             self.dummy_odom_pub.publish(dummy_odom)
-
         # print command velocity
         self.get_logger().info(f"Command Velocity: {self.new_cmd}")
 
