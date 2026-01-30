@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 from typing import Dict
+import math
 
 from traj_lib.traj_sim import (
     NO_NOISE,
@@ -10,11 +11,11 @@ from traj_lib.traj_sim import (
     UnicycleSim,
     State,
     Command,
+    wrap_angle,
 )
 from traj_lib.cfg import CMD_BOUNDS
 from traj_lib.traj_shapes import LineTraj, CircleTraj, TrajShape, Point, SquareTraj
 from traj_lib.traj_vis import TrajVisualizer
-
 
 def get_cmd(
     t: float, goal_traj: TrajShape, cur_state: State, my_cache: Dict
@@ -36,11 +37,9 @@ def get_cmd(
         Command: The command to pass to the robot.
     """
 
-    goal_pt = goal_traj.get_goal_pt(t)
-
-    vx_cmd = 0.2
-    vtheta_cmd = 0.4
-
+    vx_cmd = 0.4
+    vtheta_cmd = 0.2
+    
     # your code starts here
 
     # your code ends here
@@ -61,12 +60,12 @@ def main():
     start: State = sim.get_cur_state()
     start_pt: Point = Point(x=start.x, y=start.y)
     end_pt_goal: Point = Point(x=1.0, y=1.0)
-    goal_seconds: float = 20.0
-    # goal_traj: LineTraj = LineTraj(
-    #     start=start_pt, end=end_pt_goal, seconds=goal_seconds
-    # )
+    goal_seconds: float = 5.0
+    goal_traj: LineTraj = LineTraj(
+        start=start_pt, end=end_pt_goal, seconds=goal_seconds
+    )
     # goal_traj: CircleTraj = CircleTraj(start=start_pt, radius=1.5, seconds=goal_seconds)
-    goal_traj: SquareTraj = SquareTraj(start=start_pt, seconds=5, side_len=1.0)
+    # goal_traj: SquareTraj = SquareTraj(start=start_pt, seconds=5, side_len=1.0)
     traj_vis: TrajVisualizer = TrajVisualizer(goal_traj=goal_traj, start=start)
 
     my_cache = dict()

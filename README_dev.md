@@ -16,7 +16,7 @@ cd $HOME
 git clone https://github.com/MZandtheRaspberryPi/trajectory_workshop --recurse-submodules
 cd trajectory_workshop
 git submodule update --init --recursive
-docker build -f docker/Dockerfile -t traj --progress plain .
+docker build --network host -f docker/Dockerfile -t traj --progress plain .
 mkdir $HOME/docker_mount
 chmod -R 777 $HOME/docker_mount
 ```
@@ -25,20 +25,20 @@ chmod -R 777 $HOME/docker_mount
 
 Run steps, change the `REPO_PATH` variable to be the path to where you downloaded the git repo. Additionally, For Go2 - wire connection. Set up a ethernet interface using Ubuntu settings GUI like "unitree Go2W", IP address need to be set under "192.168.123.xxx" with net mask "255.255.255.0". For Go2W w/ Backpack - do ssh connection to the jetson. You may need to plug the jetson into a monitor to connect it to the lab WIFI and figure out what IP address it is for the WIFI Interface. From there just check the other network interfaces are on different subnets (192.168.2.50, the 2 is the subnet) and the WIFI interface is on the 192.168.1.xxx subnet. From here you should be able to SSH into it. We set the en01 interface to static ip 192.168.2.50 and netmask 255.255.255.0, which talks to the livox. We set the enxc84d44298f99 interface to 192.168.123.222 with netmask 255.255.255.0.
 
-```
+```Bash
 # export REPO_PATH=/home/data/projects/trajectory_workshop
 export REPO_PATH=/home/$USER/trajectory_workshop
-docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/developer/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/developer/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/developer/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/developer/ros_ws/src/FAST_LIO_ROS2 robohike2-jetson-test
 
+docker run -it --rm --network host --volume /home/$USER/docker_mount:/docker_mount --volume $REPO_PATH/dev/ros2_ws/scripts:/home/student/ros_ws/scripts --volume $REPO_PATH/dev/ros2_ws/src/traj_helper:/home/student/ros_ws/src/traj_helper --volume $REPO_PATH/dev/ros2_ws/src/livox_ros_driver2:/home/student/ros_ws/src/livox_ros_driver2 --volume $REPO_PATH/dev/ros2_ws/src/FAST_LIO_ROS2:/home/student/ros_ws/src/FAST_LIO_ROS2 --volume $REPO_PATH/dev/ros2_ws/src/traj_helper_msgs:/home/student/ros_ws/src/traj_helper_msgs traj
 
 cd ros_ws
 source install/setup.bash
-colcon build --symlink-install --parallel-workers 1 --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --symlink-install --parallel-workers 3 --cmake-args -DCMAKE_BUILD_TYPE=Release
 source install/setup.bash
 
 # DDS setup, put in the name of the interface you are using here
-# source unitree_cyclonedds_setup.sh enp13s0f1 # something you might find on your laptop if running code there
-source scripts/unitree_cyclonedds_setup.sh enxc84d44298f99 # usually used on GO2W with sensor backpack
+export IP_INTERFACE=eno1  # enp13s0f1 (Michael), eno1 (Hongbo), enxc84d44298f99 (Jetson BackPack)
+source scripts/unitree_cyclonedds_setup.sh $IP_INTERFACE 
 ```
 
 Test if things work. On GO2W you should see topics returned by the topic list, and the read motion state will print zeros, but it will recieve messages (Go2W does not run odometry automatically). GO2 topics should print and odometry should print.
@@ -54,7 +54,7 @@ ros2 topic echo /lf/sportmodestate --field imu_state.rpy
 
 To bringup with fastlio for odom...
 ```Bash
-ros2 launch traj_helper system.launch.py odom_fastlio:=true
+ros2 launch traj_helper system.launch.py odom_fastlio:=false  use_open_loop:=true
 ```
 
 scp student@192.168.1.99:/home/student/docker_mount/traj_data/traj_2026-01-29_09-57-28.png .
